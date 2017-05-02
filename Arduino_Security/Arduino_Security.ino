@@ -58,7 +58,7 @@ void loop() {
   //Door IR Sensor Code
     {   BlueRead=analogRead(BlueLed);
        GreenRead=analogRead(GreenLed);
-       delay(10);
+       //delay(10);
        if(GreenRead>370){
           digitalWrite(digiOut1,HIGH);
        }
@@ -76,8 +76,8 @@ void loop() {
   //Laser Code
     {
       LaserRead=analogRead(Laser);
-      Serial.println(LaserRead);
-      if(LaserRead>900){//should be 900
+      //Serial.println(LaserRead);
+      if(LaserRead>650){//should be 900
         //lights are on
         digitalWrite(digiOut0, LOW);
         digitalWrite(LaserLED, LOW);
