@@ -43,7 +43,7 @@ const int btn = 9; // The Simblee BOB (WRL-13632) has a button on pin 3.
 uint8_t boxID;
 
 double frequency;
-char buf[6];
+char buf[100];
 
 void setup() 
 {
@@ -61,8 +61,8 @@ void setup()
   // advertisementData shows up in the app as a line under deviceName. Note
   // that the length of these two fields combined must be less than 16
   // characters!
-  SimbleeForMobile.advertisementData = "Security";
   SimbleeForMobile.deviceName = "Meme";
+  SimbleeForMobile.advertisementData = "Security";
 
   // txPowerLevel can be any multiple of 4 between -20 and +4, inclusive. The
   // default value is +4; at -20 range is only a few feet.
@@ -81,11 +81,12 @@ void loop()
   double onTime = pulseIn(analogPin, HIGH);
   frequency = onTime / 32.;
   frequency = 1.58231*frequency + 1.20509;
-  Serial.println(sprintf(buf, "%04.2f", 50.05));
+  Serial.println(sprintf(buf, "%.2f", 50.05));
   Serial.print("Frequency: ");
   Serial.println(frequency);
   Serial.print("buf: ");
-  Serial.println(buf[0]);
+  //buf[0] = 'a';
+  Serial.println(buf);
   //Serial.println(1.58231*frequency + 1.20509);
   // All we want to do is detect when the button is pressed and make the box on
   // the screen white while it's pressed.
@@ -102,7 +103,7 @@ void loop()
     
     
     
-    SimbleeForMobile.updateText(textID, buf);
+    //SimbleeForMobile.updateText(textID, buf);
   }
   // This function must be called regularly to process UI events.
   SimbleeForMobile.process();
