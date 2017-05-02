@@ -77,7 +77,7 @@ void loop() {
     {
       LaserRead=analogRead(Laser);
       //Serial.println(LaserRead);
-      if(LaserRead>600){//should be 900
+      if(LaserRead>650){//should be 900
         //lights are on
         digitalWrite(digiOut0, LOW);
         digitalWrite(LaserLED, LOW);
