@@ -43,6 +43,8 @@ const int btn = 9; // The Simblee BOB (WRL-13632) has a button on pin 3.
 // you'll need to refer to them in many other functions.
 
 uint8_t boxID;
+uint8_t boxIR;
+uint8_t boxLED;
 
 double frequency;
 
@@ -111,7 +113,22 @@ void loop()
     // updateColor() function takes the id returned when we created the box and
     // tells that object to change to the color parameter passed.
     if (digitalRead(btn) && !laser_alert) SimbleeForMobile.updateColor(boxID, BLACK);
-    else { Serial.println("angery"); SimbleeForMobile.updateColor(boxID, RED); }
+    else {
+      Serial.println("angery"); SimbleeForMobile.updateColor(boxID, RED);
+    }
+    if (digitalRead(btn)) {
+      SimbleeForMobile.updateColor(boxIR, GREEN);
+    }
+    else {
+      SimbleeForMobile.updateColor(boxIR, BLACK);
+    }
+    if (!laser_alert) {
+      SimbleeForMobile.updateColor(boxLED, GREEN);
+    }
+    else {
+      SimbleeForMobile.updateColor(boxLED, BLACK);
+    }
+    
     
     counter++;
     if (counter > 25) {
@@ -164,6 +181,22 @@ void ui()
 //                          1000,                 // y dimensionrectangle
 //                          BLACK);              // color of rectangle.
 
+  SimbleeForMobile.drawText((wid/2) - 75, (hgt/2) - 125, "IR", WHITE, 30);
+  boxIR = SimbleeForMobile.drawRect(
+                          (wid/2) - 75,        // x position
+                          (hgt/2) - 75,        // y positon
+                          25,                 // x dimension
+                          25,                 // y dimensionrectangle
+                          BLACK);              // color of rectangle.
+
+  SimbleeForMobile.drawText((wid/2) + 40, (hgt/2) - 125, "LED", WHITE, 30);
+  boxLED = SimbleeForMobile.drawRect(
+                          (wid/2) + 50,        // x position
+                          (hgt/2) - 75,        // y positon
+                          25,                 // x dimension
+                          25,                 // y dimensionrectangle
+                          BLACK);              // color of rectangle.
+
   // Create a button slightly more than halfway down the screen, 100 pixels
   // wide, in the middle of the screen. The last two parameters are optional;
   // see the tutorial for more information about choices for them. The BOX_TYPE
@@ -191,7 +224,9 @@ void ui()
                               (hgt/2)+22 + 150,            // y location
                               BLUE);                 // color (optional)
 
-  textID = SimbleeForMobile.drawText(wid/2-65, hgt/2-22, buf, WHITE, 45);
+  SimbleeForMobile.drawText(wid/2-125, 50, "IoT Security System!", WHITE, 30);
+  
+  textID = SimbleeForMobile.drawText(wid/2-65, hgt/2, buf, WHITE, 45);
   //textID = SimbleeForMobile.drawText(wid/2-45, hgt/2-250, 1.58231*frequency + 1.20509, WHITE, 45);
                           
   SimbleeForMobile.endScreen();
