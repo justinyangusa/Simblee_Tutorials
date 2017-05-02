@@ -43,8 +43,8 @@ void loop() {
   // Read and print out the temperature, then convert to *F
   float c = tempsensor.readTempC();
   float f = c * 9.0 / 5.0 + 32;
-  //Serial.println("Temp: "); Serial.print(c); Serial.print("*C\t"); 
-  //Serial.print(f); Serial.println("*F");
+  Serial.println("Temp: "); Serial.print(c); Serial.print("*C\t"); 
+  Serial.print(f); Serial.println("*F");
   
   PWMsig = (int)(c*10*(255.0/1000.0));
   analogWrite(3,PWMsig);
@@ -77,7 +77,7 @@ void loop() {
     {
       LaserRead=analogRead(Laser);
       //Serial.println(LaserRead);
-      if(LaserRead>650){//should be 900
+      if(LaserRead>600){//should be 900
         //lights are on
         digitalWrite(digiOut0, LOW);
         digitalWrite(LaserLED, LOW);
