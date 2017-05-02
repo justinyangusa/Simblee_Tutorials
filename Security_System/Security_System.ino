@@ -25,6 +25,8 @@
 
 #define analogPin 11
 
+#define diginput 12
+
 const int led = 2; // The Simblee BOB (WRL-13632) has an LED on pin 2.
 int ledState = LOW;
 
@@ -43,10 +45,14 @@ const int btn = 9; // The Simblee BOB (WRL-13632) has a button on pin 3.
 uint8_t boxID;
 
 double frequency;
-char buf[100];
+
+char buf[9];
+int counter;
 
 void setup() 
 {
+  pinMode(diginput, INPUT);
+  counter = 0;
 
   Wire.beginOnPins(12, 15);
 
@@ -74,19 +80,25 @@ void setup()
   SimbleeForMobile.begin();
   Serial.begin(9600);
   Serial.println(btn);
+//  buf[2] = '.';
+//  buf[5] = 0;
 }
 
 void loop() 
 {
+  bool laser_alert = digitalRead(diginput);
+  Serial.println(laser_alert);
   double onTime = pulseIn(analogPin, HIGH);
   frequency = onTime / 32.;
   frequency = 1.58231*frequency + 1.20509;
-  Serial.println(sprintf(buf, "%.2f", 50.05));
-  Serial.print("Frequency: ");
-  Serial.println(frequency);
-  Serial.print("buf: ");
-  //buf[0] = 'a';
-  Serial.println(buf);
+  int freq = frequency;
+  int frac = ((int) (frequency * 100)) % 100;
+  Serial.println(sprintf(buf, "%d.%02d oC", freq, frac));
+  buf[6] = 176;
+  //Serial.print("Frequency: ");
+  //Serial.println(frequency);
+  //Serial.print("buf: ");
+  //Serial.println(buf);
   //Serial.println(1.58231*frequency + 1.20509);
   // All we want to do is detect when the button is pressed and make the box on
   // the screen white while it's pressed.
@@ -98,17 +110,23 @@ void loop()
     // Okay, *now* we can worry about what the button is doing. The
     // updateColor() function takes the id returned when we created the box and
     // tells that object to change to the color parameter passed.
-    if (digitalRead(btn)) SimbleeForMobile.updateColor(boxID, BLACK);
+    if (digitalRead(btn) && !laser_alert) SimbleeForMobile.updateColor(boxID, BLACK);
     else { Serial.println("angery"); SimbleeForMobile.updateColor(boxID, RED); }
     
+    counter++;
+    if (counter > 25) {
+      SimbleeForMobile.updateText(textID, buf);
+      counter = 0;
+    }
     
     
-    //SimbleeForMobile.updateText(textID, buf);
   }
+  else { Serial.println("SAD!"); }
   // This function must be called regularly to process UI events.
   SimbleeForMobile.process();
   
   //delay(1000);
+  //fflush(buf);
 }
 
 // (15.55, 25.81), (19.62, 32.25)
@@ -138,12 +156,13 @@ void ui()
   // after drawing it! The x,y coordinates are of the upper left hand corner.
   // If you pass a second color parameter, you'll get a fade from top to bottom
   // and you'll need to update *both* colors to get the whole box to change.
-  boxID = SimbleeForMobile.drawRect(
-                          (wid/2) - 50,        // x position
-                          (hgt/2) + 75,        // y positon
-                          100,                 // x dimension
-                          100,                 // y dimensionrectangle
-                          BLACK);              // color of rectangle.
+  boxID = SimbleeForMobile.drawRect(0, 0, wid, hgt, BLACK);
+//  boxID = SimbleeForMobile.drawRect(
+//                          (wid/2) - 50,        // x position
+//                          (hgt/2) + 75,        // y positon
+//                          1000,                 // x dimension
+//                          1000,                 // y dimensionrectangle
+//                          BLACK);              // color of rectangle.
 
   // Create a button slightly more than halfway down the screen, 100 pixels
   // wide, in the middle of the screen. The last two parameters are optional;
@@ -152,7 +171,7 @@ void ui()
   // third parameter defines as the width.
   btnID = SimbleeForMobile.drawButton(
                               (wid/2) - 75,          // x location
-                              (hgt/2) - 22,          // y location
+                              (hgt/2) - 22 + 150,          // y location
                               150,                   // width of button
                               "Reverse LED",         // text shown on button
                               WHITE,                 // color of button
@@ -169,10 +188,10 @@ void ui()
   // A switch's bounding box is roughly 50 by 30 pixels.
   switchID = SimbleeForMobile.drawSwitch(
                               (wid/2) - 25,          // x location
-                              (hgt/2)+22,            // y location
+                              (hgt/2)+22 + 150,            // y location
                               BLUE);                 // color (optional)
 
-  textID = SimbleeForMobile.drawText(wid/2-45, hgt/2-250, buf, WHITE, 45);
+  textID = SimbleeForMobile.drawText(wid/2-65, hgt/2-22, buf, WHITE, 45);
   //textID = SimbleeForMobile.drawText(wid/2-45, hgt/2-250, 1.58231*frequency + 1.20509, WHITE, 45);
                           
   SimbleeForMobile.endScreen();

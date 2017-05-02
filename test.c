@@ -2,9 +2,10 @@
 
 int main() {
 	char buf[100];
-	printf("%d\n", sprintf(buf, "%.2f", 50.05));
-	print("buf: ");
+	for (int i = 0; i < 10; i++){
+	printf("%d\n", sprintf(buf, "%.2f", 1000.));
+	printf("buf: ");
 	//buf[0] = 'a';
-	Serial.println(buf);
+	printf("%s\n", buf);}
 	return 0;
 }
