@@ -1,21 +1,5 @@
-/****************************************************************************
- * Read_Input Read a Simblee input from smart phone 
- * Mike Hord @ SparkFun Electronics 26 Jan 2016 
- * https://github.com/sparkfun/Simblee_Tutorials
- * 
- * This example demonstrates the use of the SimbleeForMobile library to read
- * the state of a pin on a Simblee module from a phone app. 
- * 
- * Resources: Please install the Simblee support files before attempting to use
- * this sketch; see
- * https://learn.sparkfun.com/tutorials/simblee-concepts#setting-up-arduino for
- * details.
- * 
- * Development environment specifics: Arduino.cc IDE v1.6.7
- * 
- * This code is beerware; if you see me (or any other SparkFun employee) at the
- * local, and you've found our code helpful, please buy us a round!
- * ****************************************************************************/
+// Modified from Sparkfun Simblee Tutorials
+// https://github.com/sparkfun/Simblee_Tutorials
 
 // To use the SimbleeForMobile library, you must include this file at the top
 // of your sketch. **DO NOT** include the SimbleeBLE.h file, as it will cause
@@ -24,27 +8,22 @@
 #include <Wire.h>
 
 #define analogPin 11
-
 #define diginput 12
 
 const int led = 2; // The Simblee BOB (WRL-13632) has an LED on pin 2.
 int ledState = LOW;
 
+// uint8_t object ids
+
 uint8_t btnID;
 uint8_t switchID;
 uint8_t textID;
 
-const int btn = 9; // The Simblee BOB (WRL-13632) has a button on pin 3.
-
-// Every draw command returns a uint8_t result which is the object id that was
-// created. If you wish to change the object later, you'll need this value, and
-// if you want to catch an event created by an object, you'll need it there,
-// too. Make sure you create these id variables outside of any function, as
-// you'll need to refer to them in many other functions.
-
 uint8_t boxID;
 uint8_t boxIR;
 uint8_t boxLED;
+
+const int btn = 9; // The Simblee BOB (WRL-13632) has a button on pin 3.
 
 double frequency;
 
@@ -265,5 +244,4 @@ void ui_event(event_t &event)
     digitalWrite(led, ledState);
   }
 }
-
 
